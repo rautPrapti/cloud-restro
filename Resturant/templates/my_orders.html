@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}My Orders | Cloud Restro{% endblock %}
+
+{% block content %}
+
+<section class="menu-heading text-center">
+    <div class="container">
+        <h1>My Order History</h1>
+        <p>All your Cloud Restro orders in one place.</p>
+    </div>
+</section>
+
+<section class="container py-5">
+
+    <div class="mb-4">
+        <a href="{% url 'menu' %}" class="continue-link">
+            &larr; Back to Menu
+        </a>
+    </div>
+
+    {% for order in orders %}
+
+        <div class="card order-card mb-4">
+
+            <div class="card-header order-header">
+                <div class="row align-items-center">
+
+                    <div class="col-md-6">
+                        <h5 class="mb-1">Order #{{ order.id }}</h5>
+                        <small>
+                            Placed on: {{ order.created_at|date:"d M Y, h:i A" }}
+                        </small>
+                    </div>
+
+                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                        {% if order.status == "Delivered" %}
+                            <span class="badge bg-success">
+                                {{ order.status }}
+                            </span>
+                        {% elif order.status == "Cancelled" %}
+                            <span class="badge bg-danger">
+                                {{ order.status }}
+                            </span>
+                        {% elif order.status == "Pending" %}
+                            <span class="badge bg-warning text-dark">
+                                {{ order.status }}
+                            </span>
+                        {% else %}
+                            <span class="badge bg-primary">
+                                {{ order.status }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <h6 class="order-section-title">Ordered Items</h6>
+
+                {% for item in order.items.all %}
+
+                    <div class="d-flex justify-content-between align-items-center order-item">
+                        <div>
+                            <strong>{{ item.food_item.name }}</strong>
+                            <p class="text-muted mb-0">
+                                Quantity: {{ item.quantity }}
+                            </p>
+                        </div>
+
+                        <strong>
+                            Rs. {{ item.price|floatformat:2 }}
+                        </strong>
+                    </div>
+
+                {% endfor %}
+
+                <hr>
+
+                <div class="text-end">
+                    <span class="text-muted">Order Total</span>
+                    <h4 class="food-price">
+                        Rs. {{ order.total_price|floatformat:2 }}
+                    </h4>
+                </div>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <div class="empty-cart text-center py-5">
+            <h3>No orders yet!</h3>
+            <p>Your next delicious meal is waiting.</p>
+
+            <a href="{% url 'menu' %}" class="btn cloud-btn mt-3">
+                Explore Our Menu
+            </a>
+        </div>
+
+    {% endfor %}
+
+</section>
+
+{% endblock %}

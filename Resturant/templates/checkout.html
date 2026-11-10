@@ -1,0 +1,121 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Checkout | Cloud Restro{% endblock %}
+
+{% block content %}
+
+<section class="menu-heading text-center">
+    <div class="container">
+        <h1>Complete Your Order</h1>
+        <p>Almost there! Just a few details before your food arrives.</p>
+    </div>
+</section>
+
+<section class="container py-5">
+
+    <div class="row g-4">
+
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+            <div class="card checkout-summary">
+                <div class="card-body p-4">
+
+                    <h3 class="checkout-title">Your Order Summary</h3>
+
+                    {% for item in cart_items %}
+                        <div class="checkout-item">
+                            <div>
+                                <strong>{{ item.food.name }}</strong>
+                                <p class="text-muted mb-0">
+                                    Quantity: {{ item.quantity }}
+                                </p>
+                            </div>
+
+                            <strong>Rs. {{ item.subtotal|floatformat:2 }}</strong>
+                        </div>
+                    {% empty %}
+                        <p>Your cart is empty.</p>
+                    {% endfor %}
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Order Total</strong>
+                        <h4 class="food-price mb-0">
+                            Rs. {{ total|floatformat:2 }}
+                        </h4>
+                    </div>
+
+                    <a href="{% url 'cart' %}" class="continue-link d-inline-block mt-4">
+                        &larr; Back to Cart
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Form -->
+        <div class="col-lg-7">
+            <div class="card checkout-form-card">
+                <div class="card-body p-4">
+
+                    <h3 class="checkout-title">Delivery Information</h3>
+                    <p class="text-muted mb-4">
+                        Please provide your details for delivery.
+                    </p>
+
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Customer Name</label>
+                            <input
+                                type="text"
+                                name="customer_name"
+                                class="form-control"
+                                placeholder="Enter your full name"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input
+                                type="tel"
+                                name="phone"
+                                class="form-control"
+                                placeholder="Enter your phone number"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Delivery Address</label>
+                            <textarea
+                                name="address"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Enter your complete delivery address"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <button type="submit" class="btn cloud-btn w-100">
+                            Place My Order
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,161 @@
+
+{% extends 'base.html' %}
+
+{% block title %}My Cart | Cloud Restro{% endblock %}
+
+{% block content %}
+
+<section class="menu-heading text-center">
+    <div class="container">
+        <h1>My Shopping Cart</h1>
+        <p>Your delicious choices, all in one place.</p>
+    </div>
+</section>
+
+<section class="container py-5">
+
+    <div class="mb-4">
+        <a href="{% url 'menu' %}" class="continue-link">
+            &larr; Continue Shopping
+        </a>
+    </div>
+
+    {% if cart_items %}
+
+        <div class="row g-4">
+
+            <!-- Cart items -->
+            <div class="col-lg-8">
+
+                {% for item in cart_items %}
+
+                    <div class="card cart-card mb-3">
+                        <div class="card-body">
+
+                            <div class="row align-items-center g-3">
+
+                                <div class="col-4 col-md-3">
+                                    {% if item.food.image %}
+                                        <img
+                                            src="{{ item.food.image.url }}"
+                                            class="cart-image"
+                                            alt="{{ item.food.name }}"
+                                        >
+                                    {% else %}
+                                        <div class="no-image cart-image">
+                                            No image
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-8 col-md-5">
+                                    <h5 class="cart-food-name">
+                                        {{ item.food.name }}
+                                    </h5>
+
+                                    <p class="text-muted mb-1">
+                                        Rs. {{ item.food.price }}
+                                    </p>
+
+                                    <p class="fw-bold food-price mb-0">
+                                        Subtotal: Rs. {{ item.subtotal }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <form method="POST"
+                                          action="{% url 'update_cart' item.food.id %}">
+                                        {% csrf_token %}
+
+                                        <label class="form-label">
+                                            Quantity
+                                        </label>
+
+                                        <div class="input-group">
+                                            <input
+                                                type="number"
+                                                name="quantity"
+                                                value="{{ item.quantity }}"
+                                                min="0"
+                                                class="form-control"
+                                                required
+                                            >
+
+                                            <button type="submit"
+                                                    class="btn btn-outline-success">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <form method="POST"
+                                          action="{% url 'remove_from_cart' item.food.id %}">
+                                        {% csrf_token %}
+
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm mt-2">
+                                            Remove Item
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- Order summary -->
+            <div class="col-lg-4">
+
+                <div class="card cart-summary">
+                    <div class="card-body">
+
+                        <h4>Order Summary</h4>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <span>Total</span>
+                            <strong class="food-price">
+                                Rs. {{ total }}
+                            </strong>
+                        </div>
+
+                        <a href="{% url 'checkout' %}"
+                           class="btn cloud-btn w-100 mt-4">
+                            Proceed to Checkout
+                        </a>
+
+                        <p class="text-muted text-center mt-3 small">
+                            Thank you for choosing Cloud Restro!
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-cart text-center py-5">
+            <h3>Your cart is empty!</h3>
+            <p>Looks like you haven't added anything delicious yet.</p>
+
+            <a href="{% url 'menu' %}" class="btn cloud-btn mt-3">
+                Explore Our Menu
+            </a>
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

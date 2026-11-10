@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | Cloud Restro{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="container">
+        <h1>Good Food.<br>Good Mood.</h1>
+
+        <p>Delicious food, freshly prepared and served with love.</p>
+
+        <a href="{% url 'menu' %}" class="btn cloud-btn">
+            Explore Our Menu
+        </a>
+    </div>
+</section>
+
+<section class="container py-5 text-center">
+    <h2>More Than Just Food</h2>
+    <p>
+        At Cloud Restro, we believe good food brings people together.
+        Enjoy delicious meals prepared with care and served fresh.
+    </p>
+</section>
+
+<section class="food-section py-5">
+    <div class="container text-center">
+        <h2>Our Popular Dishes</h2>
+        <p>Something delicious is waiting for you.</p>
+
+        <div class="row g-4">
+
+            {% for food in foods %}
+            <div class="col-md-4">
+                <div class="card food-card h-100">
+
+                    {% if food.image %}
+                    <img src="{{ food.image.url }}"
+                         class="card-img-top"
+                         alt="{{ food.name }}">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5>{{ food.name }}</h5>
+                        <p>Rs. {{ food.price }}</p>
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+            <p>No food items available yet.</p>
+            {% endfor %}
+
+        </div>
+
+        <a href="{% url 'menu' %}" class="btn cloud-btn mt-4">
+            View Full Menu
+        </a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <div class="text-center mb-4">
+        <h1>AI Food Recommendation</h1>
+        <p>Tell us what you're craving, and let our AI help you choose!</p>
+    </div>
+
+    <div class="card p-4 mx-auto" style="max-width: 650px;">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="preference" class="form-label">
+                What kind of food are you looking for?
+            </label>
+
+            <textarea
+                name="preference"
+                id="preference"
+                class="form-control mb-3"
+                rows="3"
+                placeholder="Example: I want something spicy and affordable..."
+                required
+            ></textarea>
+
+            <button type="submit" class="btn btn-success w-100">
+                Get Recommendations
+            </button>
+
+        </form>
+
+        {% if error %}
+            <div class="alert alert-danger mt-3">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if recommendation %}
+            <div class="mt-4">
+                <h3>Our AI Suggests:</h3>
+
+                <div class="alert alert-success">
+                    {{ recommendation|linebreaks }}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
